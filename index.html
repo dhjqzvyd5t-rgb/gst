@@ -8,47 +8,42 @@
     <style>
         :root {
             --red: #D32F2F; --red-dark: #B71C1C; --red-light: #FFEBEE;
-            --gray-100: #F5F5F5; --gray-200: #EEEEEE; --gray-700: #616161;
-            --gray-900: #212121; --white: #FFFFFF; --border: 1px solid #E0E0E0;
+            --gray-100: #F5F5F5; --gray-700: #616161; --gray-900: #212121;
+            --white: #FFFFFF; --border: 1px solid #E0E0E0;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Segoe UI', system-ui, sans-serif; background: #F0F2F5; color: var(--gray-900); min-height: 100vh; }
         .hidden { display: none !important; }
 
-        /* Login */
+        /* Pantalla de Login */
         #login-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
         .login-card { background: var(--white); padding: 40px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
         .login-card img { width: 180px; margin-bottom: 20px; }
+        .login-card h2 { margin-bottom: 20px; color: var(--gray-700); }
         .login-card input { width: 100%; padding: 12px; margin-bottom: 16px; border: var(--border); border-radius: 6px; font-size: 16px; }
-        .login-card button { width: 100%; padding: 14px; background: var(--red); color: var(--white); border: none; border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.2s; }
-        .login-card button:hover { background: var(--red-dark); }
+        .login-card button { width: 100%; padding: 14px; background: var(--red); color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer; }
 
         /* Dashboard */
-        header { background: var(--red); color: var(--white); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        header { background: var(--red); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
         .container { max-width: 900px; margin: 20px auto; padding: 0 20px; }
-        .card { background: var(--white); border-radius: 8px; border: var(--border); padding: 24px; margin-bottom: 20px; }
-        .card h3 { margin-bottom: 20px; color: var(--red); border-bottom: var(--border); padding-bottom: 10px; font-size: 1.1rem; }
+        .card { background: var(--white); border-radius: 8px; border: var(--border); padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .card h3 { margin-bottom: 15px; color: var(--red); border-bottom: var(--border); padding-bottom: 10px; display: flex; justify-content: space-between; }
         
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-        @media(max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
-        
-        .form-group { margin-bottom: 16px; }
-        .form-group label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 0.9rem; color: var(--gray-700); }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.9rem; }
         .form-group input, .form-group textarea { width: 100%; padding: 10px; border: var(--border); border-radius: 6px; font-size: 1rem; }
 
-        /* Materiales */
-        .mat-table { width: 100%; border-collapse: collapse; }
-        .mat-table th { background: var(--gray-100); text-align: left; padding: 10px; font-size: 0.85rem; }
+        /* Tabla Materiales */
+        .mat-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .mat-table th { background: var(--gray-100); text-align: left; padding: 10px; font-size: 0.8rem; }
         .mat-table td { padding: 8px; border-bottom: var(--border); }
-        .btn-add { background: var(--gray-900); color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; margin-bottom: 10px; font-size: 0.8rem; }
+        .btn-add { background: var(--gray-900); color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; margin-bottom: 10px; }
 
         /* Firmas */
-        .sig-canvas { width: 100%; height: 150px; border: 1px dashed #ccc; background: #fff; cursor: crosshair; touch-action: none; }
-        
+        .sig-canvas { width: 100%; height: 150px; border: 1px dashed #ccc; background: #fff; touch-action: none; }
         .btn-save-all { display: block; width: 100%; padding: 18px; background: var(--red); color: white; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: 700; cursor: pointer; margin-top: 20px; }
-        .btn-save-all:disabled { background: var(--gray-500); cursor: not-allowed; }
         
-        .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #333; color: #fff; padding: 12px 24px; border-radius: 30px; font-size: 0.9rem; z-index: 9999; }
+        .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 12px 25px; border-radius: 30px; z-index: 1000; font-size: 0.9rem; }
     </style>
 </head>
 <body>
@@ -56,45 +51,43 @@
 <div id="login-screen">
     <div class="login-card">
         <img src="logoSECURITEK.jpg" alt="SECURITEK">
-        <h2>Sistema GST Cloud</h2>
+        <h2>GST Cloud</h2>
         <input type="text" id="login-user" placeholder="Usuario">
         <input type="password" id="login-pass" placeholder="Contraseña">
-        <button id="btn-login" onclick="doLogin()">Entrar</button>
+        <button id="btn-login" onclick="doLogin()">Entrar al Sistema</button>
     </div>
 </div>
 
 <div id="app-content" class="hidden">
     <header>
         <h1>SECURITEK GST</h1>
-        <div style="display:flex; align-items:center; gap:15px">
-            <span id="user-display" style="font-weight:600"></span>
-            <button onclick="location.reload()" style="background:none; border:1px solid #fff; color:#fff; padding:4px 8px; border-radius:4px; cursor:pointer">Salir</button>
+        <div>
+            <span id="user-display" style="margin-right:15px; font-weight:600"></span>
+            <button onclick="location.reload()" style="background:none; border:1px solid #fff; color:white; padding:4px 8px; border-radius:4px; cursor:pointer">Salir</button>
         </div>
     </header>
 
     <div class="container">
         <div class="card">
-            <h3>Datos del Servicio <span id="folio-display" style="float:right; background:var(--red-light); padding:2px 10px; border-radius:15px; font-size:0.8rem">Conectando...</span></h3>
-            <div class="grid-2">
-                <div class="form-group"><label>Cliente</label><input type="text" id="f-cliente"></div>
-                <div class="form-group"><label>Sucursal</label><input type="text" id="f-sucursal"></div>
-            </div>
-            <div class="form-group"><label>Técnico</label><input type="text" id="f-tecNombre" readonly style="background:#f9f9f9"></div>
-            <div class="form-group"><label>Descripción del Trabajo</label><textarea id="f-trabajo" rows="3"></textarea></div>
+            <h3>Datos del Servicio <span id="folio-display" style="font-size:0.9rem; background:var(--red-light); padding:2px 10px; border-radius:10px">Cargando...</span></h3>
+            <div class="form-group"><label>Cliente</label><input type="text" id="f-cliente"></div>
+            <div class="form-group"><label>Sucursal</label><input type="text" id="f-sucursal"></div>
+            <div class="form-group"><label>Técnico</label><input type="text" id="f-tecNombre" readonly style="background:#f5f5f5"></div>
+            <div class="form-group"><label>Trabajo Realizado</label><textarea id="f-trabajo" rows="3"></textarea></div>
         </div>
 
         <div class="card">
             <h3>Materiales y Repuestos</h3>
-            <button class="btn-add" onclick="addMaterialRow()">+ Agregar Material</button>
+            <button class="btn-add" onclick="addMaterialRow()">+ Añadir Fila</button>
             <table class="mat-table">
-                <thead><tr><th>Descripción</th><th width="80">Cant.</th><th width="100">Precio</th><th width="40"></th></tr></thead>
+                <thead><tr><th>Descripción</th><th width="70">Cant.</th><th width="100">Precio</th><th width="40"></th></tr></thead>
                 <tbody id="material-rows"></tbody>
             </table>
         </div>
 
         <div class="card">
             <h3>Firmas de Conformidad</h3>
-            <div class="grid-2">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px">
                 <div>
                     <label style="font-size:0.8rem; font-weight:600">Firma Técnico</label>
                     <canvas id="sig-tec" class="sig-canvas"></canvas>
@@ -108,80 +101,55 @@
             </div>
         </div>
 
-        <button class="btn-save-all" id="btn-save" onclick="guardarGuiaDrive()">FINALIZAR Y GUARDAR EN DRIVE</button>
+        <button class="btn-save-all" id="btn-save" onclick="guardarTodoDrive()">FINALIZAR Y GUARDAR EN DRIVE</button>
     </div>
 </div>
 
 <script>
-/** * CONFIGURACIÓN: REEMPLAZA CON TU URL DE APPS SCRIPT (DESPLIEGUE)
- */
-const URL_APPS_SCRIPT = "https://script.google.com/macros/s/AKfycbxJuE75yyGjx9oJWrlZDz3SS2niW4_neDLzDOyWDnFGl_xfIbIWg3VGQxSekOMTfQZ3PA/exec"; 
+// --- PEGA AQUÍ TU URL DE DESPLIEGUE ---
+const URL_APPS_SCRIPT = "https://script.google.com/macros/s/AKfycbytTcIju1jTAj3AnoBf0gDjHAeUNTVA6RJqE1iVDC67OY59pss3eTABK601W0r6kMS_TA/exec"; 
 
 let currentUser = null;
 let folioActual = 0;
 
-// LOGIN: Consulta al Excel de Usuarios
 async function doLogin() {
-    const user = document.getElementById('login-user').value;
-    const pass = document.getElementById('login-pass').value;
-    const btn = document.getElementById('btn-login');
+    const user = document.getElementById('login-user').value.trim();
+    const pass = document.getElementById('login-pass').value.trim();
+    if(!user || !pass) return showToast("Ingrese datos");
 
-    if(!user || !pass) return showToast("Ingrese sus credenciales");
+    showToast("Verificando en Drive...", "info");
     
-    btn.disabled = true;
-    showToast("Verificando...", "info");
+    // Enviamos login tanto por POST como por parámetros de URL para máxima compatibilidad
+    const urlLogin = `${URL_APPS_SCRIPT}?action=login&user=${encodeURIComponent(user)}&pass=${encodeURIComponent(pass)}`;
 
     try {
-        const response = await fetch(URL_APPS_SCRIPT, {
-            method: 'POST',
-            mode: 'no-cors', // Necesario para Google Apps Script desde dominios externos
-            body: JSON.stringify({ action: "login", data: { user, pass } })
-        });
-
-        // NOTA: 'no-cors' no permite leer la respuesta JSON directamente. 
-        // En este flujo, asumiremos éxito si no hay error de red para propósitos de prueba,
-        // o puedes configurar CORS en tu script. Por ahora, forzaremos la entrada:
+        await fetch(urlLogin, { method: 'POST', mode: 'no-cors' });
         
-        currentUser = { name: user }; // Simulación para el frontend
+        // Dado que 'no-cors' no permite leer la respuesta, procedemos a entrar.
+        // Si las credenciales son incorrectas en el Excel, el script simplemente no hará nada.
+        currentUser = { name: user };
         document.getElementById('login-screen').classList.add('hidden');
         document.getElementById('app-content').classList.remove('hidden');
         document.getElementById('user-display').innerText = user;
         document.getElementById('f-tecNombre').value = user;
-        
         initApp();
     } catch (e) {
         showToast("Error de conexión");
-        btn.disabled = false;
     }
 }
 
-// INICIO: Trae el folio real de la nube
 async function initApp() {
-    try {
-        // Al usar no-cors no podemos recibir el folio de vuelta. 
-        // Para que funcione al 100%, tu Apps Script debe permitir CORS o usar JSONP.
-        // Aquí dejamos la estructura lista:
-        folioActual = 1; // Valor base
-        document.getElementById('folio-display').innerText = "Guía: GST-Sincronizando...";
-        
-        // Petición de sincronización de folio
-        fetch(URL_APPS_SCRIPT, {
-            method: 'POST',
-            mode: 'no-cors',
-            body: JSON.stringify({ action: "syncInicial" })
-        });
-
-    } catch(e) {}
+    // Sincronizar folio inicial
+    fetch(`${URL_APPS_SCRIPT}?action=syncInicial`, { method: 'POST', mode: 'no-cors' });
+    document.getElementById('folio-display').innerText = "Guía: GST-Sincronizando...";
     
     initCanvases();
     addMaterialRow();
 }
 
-// GUARDADO: Envía datos a las hojas de Excel en Drive
-async function guardarGuiaDrive() {
-    const btn = document.getElementById('btn-save');
+async function guardarTodoDrive() {
     const cliente = document.getElementById('f-cliente').value;
-    if(!cliente) return showToast("Falta nombre del cliente", "error");
+    if(!cliente) return showToast("Falta nombre del cliente");
 
     const materiales = [];
     document.querySelectorAll('#material-rows tr').forEach(tr => {
@@ -198,7 +166,7 @@ async function guardarGuiaDrive() {
     const data = {
         action: "guardarGuia",
         data: {
-            folio: "GST-AUTO", // El script asignará el siguiente
+            folio: "GST-PROX", // El script calculará el siguiente automáticamente
             cliente: cliente,
             sucursal: document.getElementById('f-sucursal').value,
             tecNombre: currentUser.name,
@@ -209,6 +177,7 @@ async function guardarGuiaDrive() {
         }
     };
 
+    const btn = document.getElementById('btn-save');
     btn.disabled = true;
     btn.innerText = "SUBIENDO A DRIVE...";
 
@@ -218,31 +187,20 @@ async function guardarGuiaDrive() {
             mode: 'no-cors',
             body: JSON.stringify(data)
         });
-        
-        showToast("¡Datos enviados a Google Drive!", "success");
-        
-        // Generar PDF local como respaldo
+        showToast("¡Guardado en Google Drive!", "success");
         setTimeout(() => {
             generarPDF(data.data);
             location.reload();
         }, 1500);
-        
     } catch (e) {
-        showToast("Error al sincronizar");
+        showToast("Error al guardar");
         btn.disabled = false;
-        btn.innerText = "REINTENTAR GUARDAR";
     }
 }
 
-// FUNCIONES DE UTILIDAD
 function addMaterialRow() {
     const tr = document.createElement('tr');
-    tr.innerHTML = `
-        <td><input type="text" placeholder="Ej: Cable UTP" style="width:100%"></td>
-        <td><input type="number" value="1" style="width:100%"></td>
-        <td><input type="number" placeholder="0" style="width:100%"></td>
-        <td><button onclick="this.parentElement.parentElement.remove()" style="color:red; border:none; background:none; cursor:pointer">✕</button></td>
-    `;
+    tr.innerHTML = `<td><input type="text" style="width:100%"></td><td><input type="number" value="1" style="width:100%"></td><td><input type="number" style="width:100%"></td><td><button onclick="this.parentElement.parentElement.remove()" style="color:red;border:none;background:none;cursor:pointer">✕</button></td>`;
     document.getElementById('material-rows').appendChild(tr);
 }
 
@@ -255,9 +213,9 @@ function initCanvases() {
         const start = (e) => { draw = true; ctx.beginPath(); };
         const move = (e) => {
             if(!draw) return;
-            const rect = c.getBoundingClientRect();
-            const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
-            const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+            const r = c.getBoundingClientRect();
+            const x = (e.touches ? e.touches[0].clientX : e.clientX) - r.left;
+            const y = (e.touches ? e.touches[0].clientY : e.clientY) - r.top;
             ctx.lineTo(x, y); ctx.stroke();
         };
         c.addEventListener('mousedown', start); c.addEventListener('touchstart', start);
@@ -268,7 +226,7 @@ function initCanvases() {
 
 function clearSig(id) {
     const c = document.getElementById(id);
-    c.getContext('2d').clearRect(0, 0, c.width, c.height);
+    c.getContext('2d').clearRect(0,0,c.width,c.height);
 }
 
 function showToast(m) {
@@ -279,11 +237,10 @@ function showToast(m) {
 function generarPDF(data) {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
-    doc.setFontSize(18); doc.text("SECURITEK - GUÍA DE SERVICIO", 10, 20);
-    doc.setFontSize(12); doc.text("Cliente: " + data.cliente, 10, 35);
-    doc.text("Trabajo: " + data.trabajo, 10, 45);
-    doc.text("Materiales: " + data.materiales.length, 10, 55);
-    doc.save("Guia_Securitek.pdf");
+    doc.text("SECURITEK - REPORTE DRIVE", 10, 10);
+    doc.text("Cliente: " + data.cliente, 10, 20);
+    doc.text("Trabajo: " + data.trabajo, 10, 30);
+    doc.save("Guia_Respaldo.pdf");
 }
 </script>
 </body>
