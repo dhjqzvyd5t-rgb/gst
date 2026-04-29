@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<!-- saved from url=(0066)https://html-generator-40.preview.emergentagent.com/securitek.html -->
+<html lang="es"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SECURITEK - Sistema de Guías de Servicio Técnico</title>
+<script src="./SECURITEK - Sistema de Guías de Servicio Técnico_files/jspdf.umd.min.js.descarga"></script>
+<script src="./SECURITEK - Sistema de Guías de Servicio Técnico_files/xlsx.full.min.js.descarga"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --red:#D32F2F;--red-dark:#B71C1C;--red-light:#FFEBEE;
+  --gray-50:#FAFAFA;--gray-100:#F5F5F5;--gray-200:#EEEEEE;--gray-300:#E0E0E0;
+  --gray-500:#9E9E9E;--gray-700:#616161;--gray-900:#212121;
+  --white:#FFFFFF;--border:1px solid #E0E0E0;
+}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#F0F2F5;color:var(--gray-900);min-height:100vh}
+.hidden{display:none!important}
+
+/* LOGIN */
+#login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#B71C1C 0%,#D32F2F 50%,#212121 100%);padding:20px}
+.login-box{background:white;border-radius:12px;padding:40px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,0.3)}
+.login-logo{text-align:center;margin-bottom:24px}
+.login-logo img{height:50px;max-width:220px}
+.login-logo-fallback{font-size:28px;font-weight:700;color:var(--red);letter-spacing:-1px}
+.login-title{text-align:center;font-size:14px;color:var(--gray-700);margin-bottom:28px;text-transform:uppercase;letter-spacing:1px}
+.login-box label{display:block;font-size:12px;font-weight:600;color:var(--gray-700);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+.login-box input{width:100%;padding:10px 12px;border:var(--border);border-radius:6px;font-size:14px;margin-bottom:16px;outline:none;transition:border .2s}
+.login-box input:focus{border-color:var(--red)}
+.btn-login{width:100%;padding:12px;background:var(--red);color:white;border:none;border-radius:6px;font-size:14px;font-weight:600;cursor:pointer;letter-spacing:.5px;transition:background .2s}
+.btn-login:hover{background:var(--red-dark)}
+.btn-login:disabled{background:var(--gray-500);cursor:wait}
+.login-error{background:var(--red-light);color:var(--red-dark);padding:10px;border-radius:6px;font-size:13px;margin-bottom:16px;text-align:center}
+.login-hint{font-size:11px;color:var(--gray-500);text-align:center;margin-top:16px;line-height:1.6}
+.cloud-tag{display:inline-block;margin-top:8px;background:#E3F2FD;color:#1565C0;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:.5px}
+
+/* LAYOUT */
+#app{min-height:100vh;display:flex;flex-direction:column}
+header{background:var(--red-dark);color:white;padding:0 20px;display:flex;align-items:center;gap:16px;height:56px;box-shadow:0 2px 8px rgba(0,0,0,0.2)}
+header img.logo{height:34px;filter:brightness(0) invert(1)}
+.logo-text{font-size:18px;font-weight:700;letter-spacing:-0.5px}
+.header-right{margin-left:auto;display:flex;align-items:center;gap:12px;font-size:13px;flex-wrap:wrap}
+.user-badge{background:rgba(255,255,255,0.15);padding:4px 12px;border-radius:20px;font-size:12px}
+.cloud-pill{background:rgba(76,175,80,0.25);border:1px solid rgba(255,255,255,0.4);padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;display:inline-flex;align-items:center;gap:6px}
+.cloud-pill.offline{background:rgba(244,67,54,0.25)}
+.cloud-pill .dot{width:8px;height:8px;border-radius:50%;background:#69F0AE}
+.cloud-pill.offline .dot{background:#FF8A80}
+.btn-logout{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.3);color:white;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:12px;transition:background .2s}
+.btn-logout:hover{background:rgba(255,255,255,0.2)}
+
+nav{background:white;border-bottom:var(--border);padding:0 20px;display:flex;gap:4px;overflow-x:auto}
+.nav-btn{padding:14px 18px;border:none;background:none;cursor:pointer;font-size:13px;font-weight:500;color:var(--gray-700);border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap}
+.nav-btn:hover{color:var(--red);background:var(--gray-50)}
+.nav-btn.active{color:var(--red);border-bottom-color:var(--red)}
+
+main{flex:1;padding:24px;max-width:1100px;width:100%;margin:0 auto}
+
+/* CARDS */
+.card{background:white;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,0.08);border:var(--border)}
+.card-header{padding:16px 20px;border-bottom:var(--border);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.card-title{font-size:16px;font-weight:600;color:var(--gray-900)}
+.card-body{padding:20px}
+
+/* FORM */
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-group.full{grid-column:1/-1}
+.form-group label{font-size:12px;font-weight:600;color:var(--gray-700);text-transform:uppercase;letter-spacing:.4px}
+.form-group input,.form-group select,.form-group textarea{padding:9px 12px;border:var(--border);border-radius:6px;font-size:14px;font-family:inherit;outline:none;transition:border .2s;background:var(--gray-50)}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--red);background:white}
+.form-group textarea{resize:vertical;min-height:80px}
+.folio-display{font-size:24px;font-weight:700;color:var(--red);letter-spacing:2px;padding:8px 0}
+
+/* SECTION */
+.section-title{font-size:14px;font-weight:600;color:var(--red);text-transform:uppercase;letter-spacing:.5px;padding:16px 20px 8px;border-top:var(--border);margin-top:8px}
+
+/* MATERIALES */
+.mat-table{width:100%;border-collapse:collapse;font-size:13px}
+.mat-table th{background:var(--gray-100);padding:8px 12px;text-align:left;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--gray-700);border-bottom:var(--border)}
+.mat-table td{padding:6px 8px;border-bottom:1px solid var(--gray-200)}
+.mat-table input{width:100%;padding:5px 8px;border:1px solid var(--gray-300);border-radius:4px;font-size:13px;background:transparent}
+.mat-table input:focus{outline:none;border-color:var(--red)}
+.btn-add-row{font-size:12px;color:var(--red);background:none;border:1px dashed var(--red);border-radius:6px;padding:6px 14px;cursor:pointer;margin-top:8px;transition:all .2s}
+.btn-add-row:hover{background:var(--red-light)}
+.btn-del-row{color:var(--gray-500);background:none;border:none;cursor:pointer;padding:2px 6px;border-radius:4px;font-size:16px;line-height:1}
+.btn-del-row:hover{color:var(--red);background:var(--red-light)}
+
+/* FIRMA */
+.firma-area{background:var(--gray-50);border:var(--border);border-radius:8px;padding:16px}
+.firma-canvas{border:2px dashed var(--gray-300);border-radius:6px;background:white;cursor:crosshair;display:block;width:100%;touch-action:none}
+.firma-actions{display:flex;gap:8px;margin-top:8px}
+.btn-clear-sig{font-size:12px;color:var(--gray-700);background:none;border:var(--border);border-radius:4px;padding:5px 12px;cursor:pointer}
+.firma-label{font-size:12px;color:var(--gray-700);margin-bottom:8px;font-weight:500}
+
+/* FOTOS */
+.fotos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px;margin-top:12px}
+.foto-thumb{position:relative;aspect-ratio:1;border-radius:6px;overflow:hidden;border:var(--border)}
+.foto-thumb img{width:100%;height:100%;object-fit:cover}
+.foto-del{position:absolute;top:4px;right:4px;background:rgba(0,0,0,.6);color:white;border:none;border-radius:50%;width:20px;height:20px;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
+.btn-add-foto{border:2px dashed var(--gray-300);border-radius:6px;padding:20px;text-align:center;cursor:pointer;background:var(--gray-50);transition:all .2s;font-size:13px;color:var(--gray-500);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:120px}
+.btn-add-foto:hover{border-color:var(--red);color:var(--red);background:var(--red-light)}
+
+/* BOTONES PRINCIPALES */
+.actions{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap}
+.btn-primary{padding:12px 24px;background:var(--red);color:white;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;transition:background .2s}
+.btn-primary:hover{background:var(--red-dark)}
+.btn-primary:disabled{background:var(--gray-500);cursor:wait}
+.btn-secondary{padding:12px 24px;background:white;color:var(--gray-900);border:var(--border);border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;transition:all .2s}
+.btn-secondary:hover{background:var(--gray-100)}
+.btn-success{padding:12px 24px;background:#2E7D32;color:white;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;transition:background .2s}
+.btn-success:hover{background:#1B5E20}
+
+/* TABLA ADMIN */
+.admin-table{width:100%;border-collapse:collapse;font-size:13px}
+.admin-table th{background:var(--gray-100);padding:10px 14px;text-align:left;font-weight:600;font-size:11px;text-transform:uppercase;color:var(--gray-700);border-bottom:var(--border)}
+.admin-table td{padding:10px 14px;border-bottom:1px solid var(--gray-200);vertical-align:middle}
+.admin-table tr:hover td{background:var(--gray-50)}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
+.badge-ok{background:#E8F5E9;color:#2E7D32}
+.badge-pend{background:#FFF3E0;color:#E65100}
+.link-drive{color:#1565C0;text-decoration:none;font-weight:500}
+.link-drive:hover{text-decoration:underline}
+
+/* NO PERM */
+.no-perm{text-align:center;padding:60px 20px}
+.no-perm-icon{font-size:48px;margin-bottom:16px}
+.no-perm h3{font-size:18px;color:var(--gray-700);margin-bottom:8px}
+.no-perm p{font-size:14px;color:var(--gray-500)}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--gray-900);color:white;padding:12px 20px;border-radius:8px;font-size:14px;z-index:9999;opacity:0;transition:opacity .3s;pointer-events:none;max-width:90vw}
+.toast.show{opacity:1}
+.toast.success{background:#2E7D32}
+.toast.error{background:var(--red-dark)}
+.toast.info{background:#1565C0}
+
+/* SPINNER */
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:white;border-radius:50%;animation:spin .8s linear infinite;vertical-align:middle;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">
+      <img id="logo-img" src="./SECURITEK - Sistema de Guías de Servicio Técnico_files/logoSECURITEK.jpg" alt="SECURITEK" onerror="this.style.display=&#39;none&#39;;document.getElementById(&#39;logo-fallback&#39;).style.display=&#39;block&#39;" style="display: none;">
+      <div id="logo-fallback" class="login-logo-fallback" style="display: block;">⬤ SECURITEK</div>
+      <div class="cloud-tag">☁️ Conectado a Google Drive</div>
+    </div>
+    <div class="login-title">Sistema de Guías de Servicio Técnico</div>
+    <div id="login-error" class="login-error hidden"></div>
+    <label>Usuario</label>
+    <input type="text" id="login-user" placeholder="Ingrese su usuario" autocomplete="username">
+    <label>Contraseña</label>
+    <input type="password" id="login-pass" placeholder="Ingrese su contraseña" autocomplete="current-password">
+    <button class="btn-login" id="btn-login" onclick="doLogin()">Ingresar</button>
+    <div class="login-hint">
+      Las credenciales se validan contra la hoja<br>
+      <strong>Usuarios_SECURITEK</strong> en Google Drive.
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" class="hidden">
+  <header>
+    <img class="logo" id="header-logo" src="./SECURITEK - Sistema de Guías de Servicio Técnico_files/logoSECURITEK.jpg" alt="SECURITEK" onerror="this.style.display=&#39;none&#39;;document.getElementById(&#39;header-logo-text&#39;).style.display=&#39;block&#39;" style="display: none;">
+    <span id="header-logo-text" class="logo-text" style="display: block;">⬤ SECURITEK</span>
+    <div class="header-right">
+      <span class="cloud-pill" id="cloud-status"><span class="dot"></span> Drive conectado</span>
+      <span class="user-badge" id="user-badge"></span>
+      <button class="btn-logout" onclick="doLogout()">Cerrar sesión</button>
+    </div>
+  </header>
+  <nav>
+    <button class="nav-btn active" onclick="showTab(&#39;nueva-guia&#39;,this)" id="nav-nueva">Nueva Guía</button>
+    <button class="nav-btn" onclick="handleAdminNav(&#39;mis-guias&#39;,this)" id="nav-mis">Mis Guías</button>
+    <button class="nav-btn" onclick="handleAdminNav(&#39;materiales&#39;,this)" id="nav-mat">Materiales Excel</button>
+    <button class="nav-btn" onclick="handleAdminNav(&#39;admin-guias&#39;,this)" id="nav-admin">Todas las Guías</button>
+  </nav>
+  <main>
+    <!-- NUEVA GUÍA -->
+    <div id="tab-nueva-guia">
+      <div class="card">
+        <div class="card-header">
+          <span style="font-size:20px">📋</span>
+          <span class="card-title">GUÍA DE SERVICIO TÉCNICO</span>
+          <div style="margin-left:auto">
+            <div class="folio-display" id="folio-display">GST-----</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <!-- Datos cliente -->
+          <div class="section-title">Datos del Cliente</div>
+          <div class="form-grid" style="padding:0 0 8px">
+            <div class="form-group"><label>Cliente</label><input type="text" id="f-cliente" placeholder="Nombre empresa o cliente"></div>
+            <div class="form-group"><label>Sucursal</label><input type="text" id="f-sucursal" placeholder="Nombre sucursal"></div>
+            <div class="form-group full"><label>Dirección</label><input type="text" id="f-direccion" placeholder="Dirección completa"></div>
+            <div class="form-group"><label>Fecha</label><input type="date" id="f-fecha"></div>
+            <div class="form-group"><label>Hora Inicio</label><input type="time" id="f-hora-inicio"></div>
+            <div class="form-group"><label>Hora Término</label><input type="time" id="f-hora-termino"></div>
+          </div>
+
+          <!-- Trabajo -->
+          <div class="section-title">Detalle del Trabajo</div>
+          <div class="form-grid" style="padding:0 0 8px">
+            <div class="form-group full"><label>Trabajo a Realizar</label><textarea id="f-trabajo" placeholder="Descripción detallada del trabajo realizado..." rows="3"></textarea></div>
+            <div class="form-group full"><label>Observaciones</label><textarea id="f-observaciones" placeholder="Observaciones adicionales, pendientes, recomendaciones..." rows="3"></textarea></div>
+          </div>
+
+          <!-- Materiales -->
+          <div class="section-title">Materiales Utilizados</div>
+          <div style="padding:8px 0 0">
+            <table class="mat-table" id="mat-table">
+              <thead>
+                <tr>
+                  <th style="width:40%">Descripción</th>
+                  <th style="width:20%">Código</th>
+                  <th style="width:15%">Cantidad</th>
+                  <th style="width:15%">Precio Unit.</th>
+                  <th style="width:10%"></th>
+                </tr>
+              </thead>
+              <tbody id="mat-tbody"></tbody>
+            </table>
+            <button class="btn-add-row" onclick="addMatRow()">+ Agregar material</button>
+          </div>
+
+          <!-- Fotografías -->
+          <div class="section-title">Fotografías (Opcional)</div>
+          <div style="padding:8px 0 0">
+            <input type="file" id="foto-input" accept="image/*" multiple="" style="display:none" onchange="handleFotos(this)">
+            <div class="fotos-grid" id="fotos-grid"><div class="btn-add-foto">📷<br>Agregar fotos</div></div>
+          </div>
+
+          <!-- Firmas -->
+          <div class="section-title">Firmas</div>
+          <div class="form-grid" style="padding:8px 0 0">
+            <div>
+              <div class="firma-area">
+                <div class="firma-label">Técnico</div>
+                <div class="form-grid" style="padding:0 0 10px;grid-template-columns:1fr 1fr">
+                  <div class="form-group"><label>Nombre</label><input type="text" id="f-tec-nombre" placeholder="Nombre completo"></div>
+                  <div class="form-group"><label>RUT</label><input type="text" id="f-tec-rut" placeholder="12.345.678-9"></div>
+                </div>
+                <div class="firma-label">Firma Técnico</div>
+                <canvas class="firma-canvas" id="canvas-tec" height="120" width="300"></canvas>
+                <div class="firma-actions"><button class="btn-clear-sig" onclick="clearCanvas(&#39;canvas-tec&#39;)">Limpiar firma</button></div>
+              </div>
+            </div>
+            <div>
+              <div class="firma-area">
+                <div class="firma-label">Cliente / Receptor</div>
+                <div class="form-grid" style="padding:0 0 10px;grid-template-columns:1fr 1fr">
+                  <div class="form-group"><label>Nombre</label><input type="text" id="f-cli-nombre" placeholder="Nombre completo"></div>
+                  <div class="form-group"><label>RUT</label><input type="text" id="f-cli-rut" placeholder="12.345.678-9"></div>
+                </div>
+                <div class="firma-label">Firma Cliente</div>
+                <canvas class="firma-canvas" id="canvas-cli" height="120" width="300"></canvas>
+                <div class="firma-actions"><button class="btn-clear-sig" onclick="clearCanvas(&#39;canvas-cli&#39;)">Limpiar firma</button></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Email & Acciones -->
+          <div class="section-title">Envío</div>
+          <div class="form-grid" style="padding:8px 0 16px">
+            <div class="form-group full"><label>Correo electrónico destino</label><input type="email" id="f-email" placeholder="cliente@empresa.com"></div>
+          </div>
+
+          <div class="actions">
+            <button class="btn-primary" id="btn-guardar" onclick="guardarGuia()">☁️ Guardar en Drive</button>
+            <button class="btn-secondary" onclick="generarPDF()">📄 Generar PDF</button>
+            <button class="btn-success" onclick="enviarEmail()">✉️ Enviar por Email</button>
+            <button class="btn-secondary" onclick="resetForm()">🔄 Nueva Guía</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MIS GUÍAS -->
+    <div id="tab-mis-guias" class="hidden">
+      <div class="card">
+        <div class="card-header">
+          <span style="font-size:20px">📁</span>
+          <span class="card-title">Mis Guías de Servicio</span>
+          <button class="btn-secondary" style="margin-left:auto;padding:6px 14px;font-size:12px" onclick="renderMisGuias(true)">🔄 Actualizar</button>
+        </div>
+        <div class="card-body" id="mis-guias-body">
+          <p style="color:var(--gray-500);text-align:center;padding:40px">Cargando...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- MATERIALES EXCEL -->
+    <div id="tab-materiales" class="hidden">
+      <div id="mat-no-perm" class="no-perm hidden">
+        <div class="no-perm-icon">🔒</div>
+        <h3>Acceso Restringido</h3>
+        <p>No tienes permiso para acceder a los módulos administrativos.<br>Comunícate con el administrador del sistema.</p>
+      </div>
+      <div id="mat-content" class="hidden">
+        <div class="card">
+          <div class="card-header">
+            <span style="font-size:20px">📊</span>
+            <span class="card-title">Exportar Materiales a Excel</span>
+            <button class="btn-secondary" style="margin-left:auto;padding:6px 14px;font-size:12px" onclick="renderMatExport(true)">🔄 Actualizar</button>
+          </div>
+          <div class="card-body">
+            <p style="font-size:14px;color:var(--gray-700);margin-bottom:20px">Exporta el registro completo de materiales utilizados por número de guía.</p>
+            <div id="mat-export-table"><p style="color:var(--gray-500)">Cargando...</p></div>
+            <div class="actions" style="margin-top:16px">
+              <button class="btn-primary" onclick="exportarExcel()">⬇️ Descargar Excel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TODAS LAS GUÍAS ADMIN -->
+    <div id="tab-admin-guias" class="hidden">
+      <div id="admin-no-perm" class="no-perm hidden">
+        <div class="no-perm-icon">🔒</div>
+        <h3>Acceso Restringido</h3>
+        <p>No tienes permiso para acceder a los módulos administrativos.<br>Comunícate con el administrador del sistema.</p>
+      </div>
+      <div id="admin-content" class="hidden">
+        <div class="card">
+          <div class="card-header">
+            <span style="font-size:20px">🗂️</span>
+            <span class="card-title">Administración de Guías</span>
+            <button class="btn-secondary" style="margin-left:auto;padding:6px 14px;font-size:12px" onclick="renderAdminGuias(true)">🔄 Actualizar</button>
+          </div>
+          <div class="card-body" id="admin-guias-body">
+            <p style="color:var(--gray-500);text-align:center;padding:40px">Cargando...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/*****************************************************************
+ * CONFIGURACIÓN: Pega aquí la URL /exec de tu Apps Script.
+ *****************************************************************/
+const URL_APPS_SCRIPT = "https://script.google.com/macros/s/AKfycbytTcIju1jTAj3AnoBf0gDjHAeUNTVA6RJqE1iVDC67OY59pss3eTABK601W0r6kMS_TA/exec";
+
+/*****************************************************************
+ * Estado
+ *****************************************************************/
+let currentUser = null;       // {username, role, name}
+let folioCont = 1;            // próximo folio que viene del servidor
+let fotosData = [];           // base64 de fotos seleccionadas
+let sigDrawing = {};
+let cacheGuias = [];          // últimas guías cargadas desde Drive
+let cacheMateriales = [];     // últimos materiales cargados desde Drive
+
+/*****************************************************************
+ * API: comunicación con Apps Script.
+ * Usamos Content-Type: text/plain para evitar el preflight CORS y
+ * poder LEER la respuesta del servidor (no usamos no-cors).
+ *****************************************************************/
+async function api(action, data) {
+  const body = JSON.stringify({ action, data: data || {} });
+  const res = await fetch(URL_APPS_SCRIPT, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body,
+    redirect: "follow"
+  });
+  if (!res.ok) throw new Error("HTTP " + res.status);
+  const txt = await res.text();
+  try { return JSON.parse(txt); }
+  catch (e) { throw new Error("Respuesta no válida del servidor"); }
+}
+
+function setCloudStatus(ok, msg) {
+  const el = document.getElementById("cloud-status");
+  if (!el) return;
+  el.classList.toggle("offline", !ok);
+  el.innerHTML = '<span class="dot"></span> ' + (msg || (ok ? "Drive conectado" : "Drive desconectado"));
+}
+
+/*****************************************************************
+ * LOGIN
+ *****************************************************************/
+async function doLogin() {
+  const u = document.getElementById('login-user').value.trim();
+  const p = document.getElementById('login-pass').value;
+  const err = document.getElementById('login-error');
+  const btn = document.getElementById('btn-login');
+  if (!u || !p) {
+    err.textContent = "Ingresa usuario y contraseña.";
+    err.classList.remove('hidden');
+    return;
+  }
+  err.classList.add('hidden');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Verificando...';
+
+  try {
+    const resp = await api("login", { user: u, pass: p });
+    if (resp.status !== "ok") {
+      err.textContent = resp.message || "Credenciales incorrectas.";
+      err.classList.remove('hidden');
+      return;
+    }
+    currentUser = { username: resp.username || u.toLowerCase(), role: resp.role || "tecnico", name: resp.name || u };
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('app').classList.remove('hidden');
+    document.getElementById('user-badge').textContent = currentUser.name + " · " + currentUser.role;
+    initApp();
+  } catch (e) {
+    err.textContent = "Error de conexión con Google Drive: " + e.message;
+    err.classList.remove('hidden');
+    setCloudStatus(false, "Drive desconectado");
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = "Ingresar";
+  }
+}
+
+document.getElementById('login-pass').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+document.getElementById('login-user').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+function doLogout() {
+  currentUser = null;
+  document.getElementById('app').classList.add('hidden');
+  document.getElementById('login-screen').classList.remove('hidden');
+  document.getElementById('login-user').value = '';
+  document.getElementById('login-pass').value = '';
+}
+
+/*****************************************************************
+ * NAV
+ *****************************************************************/
+function handleAdminNav(tab, btn) {
+  if (tab === 'mis-guias') { showTab(tab, btn); renderMisGuias(); return; }
+  if (currentUser.role !== 'admin') {
+    showTab(tab, btn);
+    if (tab === 'materiales') {
+      document.getElementById('mat-no-perm').classList.remove('hidden');
+      document.getElementById('mat-content').classList.add('hidden');
+    } else {
+      document.getElementById('admin-no-perm').classList.remove('hidden');
+      document.getElementById('admin-content').classList.add('hidden');
+    }
+    return;
+  }
+  showTab(tab, btn);
+  if (tab === 'materiales') {
+    document.getElementById('mat-no-perm').classList.add('hidden');
+    document.getElementById('mat-content').classList.remove('hidden');
+    renderMatExport();
+  } else if (tab === 'admin-guias') {
+    document.getElementById('admin-no-perm').classList.add('hidden');
+    document.getElementById('admin-content').classList.remove('hidden');
+    renderAdminGuias();
+  }
+}
+
+function showTab(name, btn) {
+  document.querySelectorAll('[id^="tab-"]').forEach(t => t.classList.add('hidden'));
+  document.getElementById('tab-' + name).classList.remove('hidden');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+}
+
+/*****************************************************************
+ * INIT APP
+ *****************************************************************/
+async function initApp() {
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('f-fecha').value = today;
+  document.getElementById('f-tec-nombre').value = currentUser.name || '';
+  addMatRow();
+  initCanvas('canvas-tec');
+  initCanvas('canvas-cli');
+  await syncFolio();
+}
+
+async function syncFolio() {
+  document.getElementById('folio-display').textContent = "Sincronizando...";
+  try {
+    const resp = await api("syncInicial");
+    if (resp && resp.folio) {
+      folioCont = parseInt(resp.folio);
+      updateFolioDisplay();
+      setCloudStatus(true, "Drive conectado");
+    } else {
+      document.getElementById('folio-display').textContent = "GST-----";
+      setCloudStatus(false, "Drive desconectado");
+    }
+  } catch (e) {
+    document.getElementById('folio-display').textContent = "GST-----";
+    setCloudStatus(false, "Drive desconectado");
+    showToast("No se pudo sincronizar el folio.", "error");
+  }
+}
+
+function updateFolioDisplay() {
+  document.getElementById('folio-display').textContent = 'GST-' + String(folioCont).padStart(4, '0');
+}
+
+/*****************************************************************
+ * MATERIALES (form)
+ *****************************************************************/
+function addMatRow() {
+  const tbody = document.getElementById('mat-tbody');
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td><input type="text" placeholder="Descripción del material"></td>
+    <td><input type="text" placeholder="COD-001"></td>
+    <td><input type="number" placeholder="1" min="0" step="0.5"></td>
+    <td><input type="number" placeholder="0" min="0" step="100"></td>
+    <td><button class="btn-del-row" onclick="this.closest('tr').remove()">×</button></td>`;
+  tbody.appendChild(tr);
+}
+
+function getMateriales() {
+  const rows = document.querySelectorAll('#mat-tbody tr');
+  return Array.from(rows).map(r => {
+    const inputs = r.querySelectorAll('input');
+    return { desc: inputs[0].value, codigo: inputs[1].value, cantidad: inputs[2].value, precio: inputs[3].value };
+  }).filter(m => m.desc.trim());
+}
+
+/*****************************************************************
+ * FOTOS
+ *****************************************************************/
+function handleFotos(input) {
+  Array.from(input.files).forEach(file => {
+    // Reducimos tamaño antes de subir a Drive (max ~1280px lado mayor)
+    comprimirImagen(file, 1280, 0.8).then(b64 => {
+      fotosData.push(b64);
+      renderFotos();
+    }).catch(() => {
+      const reader = new FileReader();
+      reader.onload = e => { fotosData.push(e.target.result); renderFotos(); };
+      reader.readAsDataURL(file);
+    });
+  });
+  input.value = '';
+}
+
+function comprimirImagen(file, maxLado, calidad) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        let w = img.width, h = img.height;
+        if (Math.max(w, h) > maxLado) {
+          if (w >= h) { h = Math.round(h * maxLado / w); w = maxLado; }
+          else { w = Math.round(w * maxLado / h); h = maxLado; }
+        }
+        const cvs = document.createElement('canvas');
+        cvs.width = w; cvs.height = h;
+        cvs.getContext('2d').drawImage(img, 0, 0, w, h);
+        resolve(cvs.toDataURL('image/jpeg', calidad));
+      };
+      img.onerror = reject;
+      img.src = e.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+function renderFotos() {
+  const grid = document.getElementById('fotos-grid');
+  grid.innerHTML = '';
+  fotosData.forEach((src, i) => {
+    const div = document.createElement('div');
+    div.className = 'foto-thumb';
+    div.innerHTML = `<img src="${src}"><button class="foto-del" onclick="deleteFoto(${i})">×</button>`;
+    grid.appendChild(div);
+  });
+  const add = document.createElement('div');
+  add.className = 'btn-add-foto';
+  add.onclick = () => document.getElementById('foto-input').click();
+  add.innerHTML = '📷<br>Agregar fotos';
+  grid.appendChild(add);
+}
+
+function deleteFoto(i) { fotosData.splice(i, 1); renderFotos(); }
+
+/*****************************************************************
+ * CANVAS FIRMA
+ *****************************************************************/
+function initCanvas(id) {
+  const canvas = document.getElementById(id);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  canvas.width = canvas.offsetWidth || 300;
+  ctx.strokeStyle = '#1a1a1a';
+  ctx.lineWidth = 2;
+  ctx.lineCap = 'round';
+  sigDrawing[id] = false;
+  const getPos = e => {
+    const r = canvas.getBoundingClientRect();
+    const src = e.touches ? e.touches[0] : e;
+    return { x: src.clientX - r.left, y: src.clientY - r.top };
+  };
+  canvas.addEventListener('mousedown', e => { sigDrawing[id] = true; const p = getPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); });
+  canvas.addEventListener('mousemove', e => { if (!sigDrawing[id]) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); });
+  canvas.addEventListener('mouseup', () => sigDrawing[id] = false);
+  canvas.addEventListener('mouseleave', () => sigDrawing[id] = false);
+  canvas.addEventListener('touchstart', e => { e.preventDefault(); sigDrawing[id] = true; const p = getPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); }, { passive: false });
+  canvas.addEventListener('touchmove', e => { e.preventDefault(); if (!sigDrawing[id]) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); }, { passive: false });
+  canvas.addEventListener('touchend', () => sigDrawing[id] = false);
+}
+
+function clearCanvas(id) {
+  const canvas = document.getElementById(id);
+  canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+}
+
+/*****************************************************************
+ * GUARDAR EN DRIVE
+ *****************************************************************/
+function getFormData() {
+  return {
+    folio: 'GST-' + String(folioCont).padStart(4, '0'),
+    cliente: document.getElementById('f-cliente').value,
+    sucursal: document.getElementById('f-sucursal').value,
+    direccion: document.getElementById('f-direccion').value,
+    fecha: document.getElementById('f-fecha').value,
+    horaInicio: document.getElementById('f-hora-inicio').value,
+    horaTermino: document.getElementById('f-hora-termino').value,
+    trabajo: document.getElementById('f-trabajo').value,
+    observaciones: document.getElementById('f-observaciones').value,
+    tecNombre: document.getElementById('f-tec-nombre').value,
+    tecRut: document.getElementById('f-tec-rut').value,
+    cliNombre: document.getElementById('f-cli-nombre').value,
+    cliRut: document.getElementById('f-cli-rut').value,
+    email: document.getElementById('f-email').value,
+    materiales: getMateriales(),
+    firmaTec: document.getElementById('canvas-tec').toDataURL('image/png'),
+    firmaCli: document.getElementById('canvas-cli').toDataURL('image/png'),
+    fotos: [...fotosData],
+    usuario: currentUser.username,
+    timestamp: new Date().toISOString()
+  };
+}
+
+async function guardarGuia() {
+  const data = getFormData();
+  if (!data.cliente) { showToast('Ingresa el nombre del cliente.', 'error'); return; }
+  const btn = document.getElementById('btn-guardar');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Subiendo a Drive...';
+  showToast("Subiendo guía a Google Drive...", "info");
+
+  try {
+    const resp = await api("guardarGuia", data);
+    if (resp.status === "success") {
+      data.folio = resp.folio || data.folio; // folio definitivo del servidor
+      showToast('Guía ' + data.folio + ' guardada en Drive.', 'success');
+      // Refrescamos folio para la próxima
+      folioCont = parseInt(String(resp.folio).replace("GST-", "")) + 1;
+      updateFolioDisplay();
+      // Invalidamos cachés
+      cacheGuias = []; cacheMateriales = [];
+      setTimeout(() => {
+        if (confirm('¿Deseas generar el PDF de esta guía?')) generarPDF(data);
+      }, 400);
+    } else {
+      showToast(resp.message || 'Error al guardar.', 'error');
+    }
+  } catch (e) {
+    showToast('Error al subir a Drive: ' + e.message, 'error');
+    setCloudStatus(false, "Drive desconectado");
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '☁️ Guardar en Drive';
+  }
+}
+
+/*****************************************************************
+ * PDF
+ *****************************************************************/
+function generarPDF(data) {
+  data = data || getFormData();
+  const { jsPDF } = window.jspdf;
+  if (!jsPDF) { showToast('Error cargando PDF', 'error'); return; }
+  const doc = new jsPDF('p', 'mm', 'a4');
+  const W = 210, pad = 14;
+
+  doc.setFillColor(183, 28, 28);
+  doc.rect(0, 0, W, 32, 'F');
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(16); doc.setFont(undefined, 'bold');
+  doc.text('GUÍA DE SERVICIO TÉCNICO', W / 2, 13, { align: 'center' });
+  doc.setFontSize(10); doc.setFont(undefined, 'normal');
+  doc.text('SECURITEK - Soluciones de Seguridad', W / 2, 20, { align: 'center' });
+  doc.setFontSize(14); doc.setFont(undefined, 'bold');
+  doc.text('N° ' + data.folio, W / 2, 28, { align: 'center' });
+
+  let y = 40;
+  const row = (label, val, x1 = pad, x2 = 70) => {
+    doc.setFontSize(9); doc.setFont(undefined, 'bold'); doc.setTextColor(80, 80, 80);
+    doc.text(label, x1, y);
+    doc.setFont(undefined, 'normal'); doc.setTextColor(30, 30, 30);
+    doc.text(String(val || '-'), x2, y);
+    y += 6;
+  };
+
+  doc.setFontSize(11); doc.setFont(undefined, 'bold'); doc.setTextColor(183, 28, 28);
+  doc.text('DATOS DEL CLIENTE', pad, y); y += 5;
+  doc.setDrawColor(183, 28, 28); doc.line(pad, y, W - pad, y); y += 5;
+
+  row('Cliente:', data.cliente);
+  row('Sucursal:', data.sucursal);
+  row('Dirección:', data.direccion);
+  row('Fecha:', data.fecha);
+  row('Hora Inicio:', data.horaInicio); y -= 6;
+  row('Hora Término:', data.horaTermino, 110, 155);
+  y += 4;
+
+  doc.setFontSize(11); doc.setFont(undefined, 'bold'); doc.setTextColor(183, 28, 28);
+  doc.text('DETALLE DEL TRABAJO', pad, y); y += 5;
+  doc.setDrawColor(183, 28, 28); doc.line(pad, y, W - pad, y); y += 5;
+  doc.setFontSize(9); doc.setFont(undefined, 'bold'); doc.setTextColor(80, 80, 80);
+  doc.text('Trabajo realizado:', pad, y); y += 5;
+  doc.setFont(undefined, 'normal'); doc.setTextColor(30, 30, 30);
+  const trabajoLines = doc.splitTextToSize(data.trabajo || '-', W - pad * 2);
+  doc.text(trabajoLines, pad + 4, y); y += trabajoLines.length * 5 + 4;
+  doc.setFont(undefined, 'bold'); doc.setTextColor(80, 80, 80);
+  doc.text('Observaciones:', pad, y); y += 5;
+  doc.setFont(undefined, 'normal'); doc.setTextColor(30, 30, 30);
+  const obsLines = doc.splitTextToSize(data.observaciones || '-', W - pad * 2);
+  doc.text(obsLines, pad + 4, y); y += obsLines.length * 5 + 6;
+
+  if (data.materiales && data.materiales.length > 0) {
+    doc.setFontSize(11); doc.setFont(undefined, 'bold'); doc.setTextColor(183, 28, 28);
+    doc.text('MATERIALES UTILIZADOS', pad, y); y += 5;
+    doc.setDrawColor(183, 28, 28); doc.line(pad, y, W - pad, y); y += 5;
+    doc.setFillColor(240, 240, 240);
+    doc.rect(pad, y - 4, W - pad * 2, 7, 'F');
+    doc.setFontSize(8); doc.setFont(undefined, 'bold'); doc.setTextColor(60, 60, 60);
+    doc.text('Descripción', pad + 2, y);
+    doc.text('Código', 105, y);
+    doc.text('Cantidad', 140, y);
+    doc.text('P.Unit.', 168, y);
+    y += 5;
+    data.materiales.forEach(m => {
+      doc.setFont(undefined, 'normal'); doc.setTextColor(30, 30, 30); doc.setFontSize(8);
+      doc.text(String(m.desc || ''), pad + 2, y);
+      doc.text(String(m.codigo || ''), 105, y);
+      doc.text(String(m.cantidad || ''), 142, y);
+      doc.text(m.precio ? '$' + m.precio : '', 168, y);
+      y += 5;
+      doc.setDrawColor(220, 220, 220); doc.line(pad, y - 1, W - pad, y - 1);
+    });
+    y += 4;
+  }
+
+  if (y > 220) doc.addPage();
+  y = Math.max(y, 200);
+  doc.setFontSize(11); doc.setFont(undefined, 'bold'); doc.setTextColor(183, 28, 28);
+  doc.text('FIRMAS', pad, y); y += 5;
+  doc.setDrawColor(183, 28, 28); doc.line(pad, y, W - pad, y); y += 8;
+  try {
+    if (data.firmaTec) doc.addImage(data.firmaTec, 'PNG', pad, y, 80, 30);
+    if (data.firmaCli) doc.addImage(data.firmaCli, 'PNG', 114, y, 80, 30);
+  } catch (e) {}
+  y += 32;
+  doc.setFontSize(9); doc.setFont(undefined, 'bold'); doc.setTextColor(60, 60, 60);
+  doc.text(data.tecNombre || 'Técnico', pad + 40, y, { align: 'center' });
+  doc.text(data.cliNombre || 'Cliente', 154, y, { align: 'center' });
+  doc.setFont(undefined, 'normal'); doc.setFontSize(8); doc.setTextColor(120, 120, 120);
+  doc.text('RUT: ' + (data.tecRut || ''), pad + 40, y + 5, { align: 'center' });
+  doc.text('RUT: ' + (data.cliRut || ''), 154, y + 5, { align: 'center' });
+
+  if (data.fotos && data.fotos.length > 0) {
+    doc.addPage();
+    doc.setFontSize(11); doc.setFont(undefined, 'bold'); doc.setTextColor(183, 28, 28);
+    doc.text('REGISTRO FOTOGRÁFICO - ' + data.folio, pad, 20);
+    doc.setDrawColor(183, 28, 28); doc.line(pad, 22, W - pad, 22);
+    let fx = pad, fy = 28, pw = 85;
+    data.fotos.slice(0, 6).forEach((src) => {
+      try { doc.addImage(src, 'JPEG', fx, fy, pw, 65); } catch (e) {}
+      fx += pw + 6;
+      if (fx > W - pad - pw) { fx = pad; fy += 71; }
+    });
+  }
+
+  doc.save('Guia_' + data.folio + '.pdf');
+  showToast('PDF generado: Guia_' + data.folio + '.pdf', 'success');
+}
+
+/*****************************************************************
+ * EMAIL
+ *****************************************************************/
+function enviarEmail() {
+  const data = getFormData();
+  const email = data.email;
+  if (!email) { showToast('Ingresa un correo electrónico destino.', 'error'); return; }
+  const subject = encodeURIComponent('Guía de Servicio Técnico ' + data.folio + ' - SECURITEK');
+  const body = encodeURIComponent(
+    'Estimado/a,\n\nAdjunto encontrará la Guía de Servicio Técnico N° ' + data.folio + '.\n\n' +
+    'Cliente: ' + (data.cliente || '-') + '\n' +
+    'Fecha: ' + (data.fecha || '-') + '\n' +
+    'Trabajo: ' + (data.trabajo || '-') + '\n\n' +
+    'Por favor descargue el PDF desde el sistema para el documento completo.\n\nSaludos,\nSECURITEK'
+  );
+  window.open('mailto:' + email + '?subject=' + subject + '&body=' + body);
+  showToast('Se abrió el cliente de correo.', 'success');
+}
+
+/*****************************************************************
+ * RESET
+ *****************************************************************/
+function resetForm() {
+  if (!confirm('¿Iniciar una nueva guía? Los datos no guardados se perderán.')) return;
+  ['f-cliente', 'f-sucursal', 'f-direccion', 'f-hora-inicio', 'f-hora-termino', 'f-trabajo', 'f-observaciones', 'f-tec-rut', 'f-cli-nombre', 'f-cli-rut', 'f-email'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  document.getElementById('mat-tbody').innerHTML = '';
+  addMatRow();
+  fotosData = [];
+  renderFotos();
+  clearCanvas('canvas-tec');
+  clearCanvas('canvas-cli');
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('f-fecha').value = today;
+  document.getElementById('f-tec-nombre').value = currentUser.name || '';
+  syncFolio();
+}
+
+/*****************************************************************
+ * LISTADOS DESDE DRIVE
+ *****************************************************************/
+async function cargarGuiasRemotas(filtroUsuario) {
+  const payload = filtroUsuario ? { usuario: filtroUsuario } : {};
+  const resp = await api("listarGuias", payload);
+  if (resp.status === "ok") return resp.guias || [];
+  throw new Error(resp.message || "Error consultando guías");
+}
+
+async function renderMisGuias(force) {
+  const body = document.getElementById('mis-guias-body');
+  body.innerHTML = '<p style="color:var(--gray-500);text-align:center;padding:40px">Cargando desde Drive...</p>';
+  try {
+    const guias = await cargarGuiasRemotas(currentUser.username);
+    pintarGuias(body, guias, false);
+  } catch (e) {
+    body.innerHTML = '<p style="color:var(--red);text-align:center;padding:40px">Error: ' + e.message + '</p>';
+  }
+}
+
+async function renderAdminGuias(force) {
+  const body = document.getElementById('admin-guias-body');
+  body.innerHTML = '<p style="color:var(--gray-500);text-align:center;padding:40px">Cargando desde Drive...</p>';
+  try {
+    const guias = await cargarGuiasRemotas(null);
+    cacheGuias = guias;
+    pintarGuias(body, guias, true);
+  } catch (e) {
+    body.innerHTML = '<p style="color:var(--red);text-align:center;padding:40px">Error: ' + e.message + '</p>';
+  }
+}
+
+function pintarGuias(body, guias, esAdmin) {
+  if (!guias.length) {
+    body.innerHTML = '<p style="color:var(--gray-500);text-align:center;padding:40px">No hay guías guardadas aún.</p>';
+    return;
+  }
+  body.innerHTML = `<div style="overflow-x:auto"><table class="admin-table">
+    <thead><tr><th>Folio</th><th>Cliente</th><th>Sucursal</th><th>Fecha</th><th>Técnico</th>${esAdmin ? '<th>Materiales</th>' : ''}<th>Drive</th><th>Acciones</th></tr></thead>
+    <tbody>${guias.map((g, i) => `<tr>
+      <td><strong>${g.folio || '-'}</strong></td>
+      <td>${g.cliente || '-'}</td>
+      <td>${g.sucursal || '-'}</td>
+      <td>${g.fecha || '-'}</td>
+      <td>${g.tecNombre || '-'}</td>
+      ${esAdmin ? `<td><span class="badge ${g.materiales && g.materiales.length ? 'badge-ok' : 'badge-pend'}">${g.materiales && g.materiales.length ? g.materiales.length + ' items' : 'Sin materiales'}</span></td>` : ''}
+      <td>${g.urlCarpeta ? `<a class="link-drive" href="${g.urlCarpeta}" target="_blank">📁 Abrir</a>` : '-'}</td>
+      <td><button class="btn-secondary" style="padding:4px 10px;font-size:12px" onclick="generarPDFRemoto(${i}, ${esAdmin ? 'true' : 'false'})">PDF</button></td>
+    </tr>`).join('')}</tbody>
+  </table></div>`;
+  if (esAdmin) cacheGuias = guias;
+  else cacheMisGuias = guias, window.__misGuias = guias;
+}
+
+async function generarPDFRemoto(idx, esAdmin) {
+  const arr = esAdmin ? cacheGuias : (window.__misGuias || []);
+  const g = arr[idx];
+  if (!g) return;
+  // Las firmas vienen como URL pública de Drive: las cargamos como dataURL
+  showToast("Preparando PDF...", "info");
+  const data = { ...g };
+  data.firmaTec = await urlAImagenBase64(g.urlFirmaTec).catch(() => '');
+  data.firmaCli = await urlAImagenBase64(g.urlFirmaCli).catch(() => '');
+  data.fotos = [];
+  for (const u of (g.urlsFotos || []).slice(0, 6)) {
+    try { data.fotos.push(await urlAImagenBase64(u)); } catch (e) {}
+  }
+  generarPDF(data);
+}
+
+async function urlAImagenBase64(url) {
+  if (!url) return '';
+  // Convierte una URL pública de Drive a base64 dataURL.
+  const driveId = (url.match(/[-\w]{25,}/) || [])[0];
+  const fetchUrl = driveId ? `https://drive.google.com/uc?export=view&id=${driveId}` : url;
+  const r = await fetch(fetchUrl);
+  const blob = await r.blob();
+  return await new Promise((res, rej) => {
+    const fr = new FileReader();
+    fr.onload = () => res(fr.result);
+    fr.onerror = rej;
+    fr.readAsDataURL(blob);
+  });
+}
+
+/*****************************************************************
+ * MATERIALES (export)
+ *****************************************************************/
+async function renderMatExport(force) {
+  const div = document.getElementById('mat-export-table');
+  div.innerHTML = '<p style="color:var(--gray-500)">Cargando desde Drive...</p>';
+  try {
+    if (!cacheGuias.length || force) cacheGuias = await cargarGuiasRemotas(null);
+    const allMat = cacheGuias.flatMap(g => (g.materiales || []).map(m => ({ folio: g.folio, fecha: g.fecha, cliente: g.cliente, ...m })));
+    cacheMateriales = allMat;
+    if (!allMat.length) { div.innerHTML = '<p style="color:var(--gray-500)">No hay materiales registrados aún.</p>'; return; }
+    div.innerHTML = `<div style="overflow-x:auto"><table class="admin-table">
+      <thead><tr><th>Folio</th><th>Fecha</th><th>Cliente</th><th>Descripción</th><th>Código</th><th>Cantidad</th><th>Precio Unit.</th></tr></thead>
+      <tbody>${allMat.map(m => `<tr>
+        <td>${m.folio || '-'}</td><td>${m.fecha || '-'}</td><td>${m.cliente || '-'}</td>
+        <td>${m.desc || '-'}</td><td>${m.codigo || '-'}</td><td>${m.cantidad || '-'}</td><td>${m.precio ? '$' + m.precio : '-'}</td>
+      </tr>`).join('')}</tbody>
+    </table></div>`;
+  } catch (e) {
+    div.innerHTML = '<p style="color:var(--red)">Error: ' + e.message + '</p>';
+  }
+}
+
+function exportarExcel() {
+  if (!cacheGuias.length) { showToast("Primero carga los datos.", "error"); return; }
+  const wb = XLSX.utils.book_new();
+  const allMat = cacheGuias.flatMap(g => (g.materiales || []).map(m => ({
+    'N° Guía': g.folio, 'Fecha': g.fecha, 'Cliente': g.cliente, 'Sucursal': g.sucursal,
+    'Descripción': m.desc, 'Código': m.codigo, 'Cantidad': m.cantidad, 'Precio Unitario': m.precio
+  })));
+  const ws = XLSX.utils.json_to_sheet(allMat.length ? allMat : [{ 'N° Guía': 'Sin datos' }]);
+  XLSX.utils.book_append_sheet(wb, ws, 'Materiales');
+
+  const resumen = cacheGuias.map(g => ({
+    'N° Guía': g.folio, 'Fecha': g.fecha, 'Cliente': g.cliente, 'Sucursal': g.sucursal,
+    'Técnico': g.tecNombre, 'RUT Técnico': g.tecRut, 'Trabajo': g.trabajo,
+    'Total Materiales': g.materiales && g.materiales.length || 0,
+    'Carpeta Drive': g.urlCarpeta || ''
+  }));
+  const ws2 = XLSX.utils.json_to_sheet(resumen.length ? resumen : [{ 'N° Guía': 'Sin datos' }]);
+  XLSX.utils.book_append_sheet(wb, ws2, 'Resumen Guías');
+  XLSX.writeFile(wb, 'SECURITEK_Materiales_' + new Date().toISOString().split('T')[0] + '.xlsx');
+  showToast('Excel descargado exitosamente.', 'success');
+}
+
+/*****************************************************************
+ * TOAST
+ *****************************************************************/
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  clearTimeout(t._t);
+  t._t = setTimeout(() => t.className = 'toast', 3000);
+}
+
+window.addEventListener('load', () => { renderFotos(); });
+</script>
+<script defer="" src="./SECURITEK - Sistema de Guías de Servicio Técnico_files/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon="{&quot;version&quot;:&quot;2024.11.0&quot;,&quot;token&quot;:&quot;7f7b0fd8732c4326aae4b9d58d5c514a&quot;,&quot;server_timing&quot;:{&quot;name&quot;:{&quot;cfCacheStatus&quot;:true,&quot;cfEdge&quot;:true,&quot;cfExtPri&quot;:true,&quot;cfL4&quot;:true,&quot;cfOrigin&quot;:true,&quot;cfSpeedBrain&quot;:true},&quot;location_startswith&quot;:null}}" crossorigin="anonymous"></script>
+
+
+</body></html>
