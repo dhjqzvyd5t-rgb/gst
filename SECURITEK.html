@@ -4,8 +4,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SECURITEK - Sistema de Guías de Servicio Técnico</title>
-<script src="./SECURITEK - Sistema de Guías de Servicio Técnico_files/jspdf.umd.min.js.descarga"></script>
-<script src="./SECURITEK - Sistema de Guías de Servicio Técnico_files/xlsx.full.min.js.descarga"></script>
+<script src="./SECURITEK - Sistema de Guías de Servicio Técnico2_files/jspdf.umd.min.js.descarga"></script>
+<script src="./SECURITEK - Sistema de Guías de Servicio Técnico2_files/xlsx.full.min.js.descarga"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -145,7 +145,7 @@ main{flex:1;padding:24px;max-width:1100px;width:100%;margin:0 auto}
 <div id="login-screen">
   <div class="login-box">
     <div class="login-logo">
-      <img id="logo-img" src="./SECURITEK - Sistema de Guías de Servicio Técnico_files/logoSECURITEK.jpg" alt="SECURITEK" onerror="this.style.display=&#39;none&#39;;document.getElementById(&#39;logo-fallback&#39;).style.display=&#39;block&#39;" style="display: none;">
+      <img id="logo-img" src="./SECURITEK - Sistema de Guías de Servicio Técnico2_files/logoSECURITEK.jpg" alt="SECURITEK" onerror="this.style.display=&#39;none&#39;;document.getElementById(&#39;logo-fallback&#39;).style.display=&#39;block&#39;" style="display: none;">
       <div id="logo-fallback" class="login-logo-fallback" style="display: block;">⬤ SECURITEK</div>
       <div class="cloud-tag">☁️ Conectado a Google Drive</div>
     </div>
@@ -166,7 +166,7 @@ main{flex:1;padding:24px;max-width:1100px;width:100%;margin:0 auto}
 <!-- APP -->
 <div id="app" class="hidden">
   <header>
-    <img class="logo" id="header-logo" src="./SECURITEK - Sistema de Guías de Servicio Técnico_files/logoSECURITEK.jpg" alt="SECURITEK" onerror="this.style.display=&#39;none&#39;;document.getElementById(&#39;header-logo-text&#39;).style.display=&#39;block&#39;" style="display: none;">
+    <img class="logo" id="header-logo" src="./SECURITEK - Sistema de Guías de Servicio Técnico2_files/logoSECURITEK.jpg" alt="SECURITEK" onerror="this.style.display=&#39;none&#39;;document.getElementById(&#39;header-logo-text&#39;).style.display=&#39;block&#39;" style="display: none;">
     <span id="header-logo-text" class="logo-text" style="display: block;">⬤ SECURITEK</span>
     <div class="header-right">
       <span class="cloud-pill" id="cloud-status"><span class="dot"></span> Drive conectado</span>
@@ -216,11 +216,10 @@ main{flex:1;padding:24px;max-width:1100px;width:100%;margin:0 auto}
             <table class="mat-table" id="mat-table">
               <thead>
                 <tr>
-                  <th style="width:40%">Descripción</th>
-                  <th style="width:20%">Código</th>
+                  <th style="width:55%">Descripción</th>
+                  <th style="width:25%">Código</th>
                   <th style="width:15%">Cantidad</th>
-                  <th style="width:15%">Precio Unit.</th>
-                  <th style="width:10%"></th>
+                  <th style="width:5%"></th>
                 </tr>
               </thead>
               <tbody id="mat-tbody"></tbody>
@@ -348,7 +347,7 @@ main{flex:1;padding:24px;max-width:1100px;width:100%;margin:0 auto}
 /*****************************************************************
  * CONFIGURACIÓN: Pega aquí la URL /exec de tu Apps Script.
  *****************************************************************/
-const URL_APPS_SCRIPT = "https://script.google.com/macros/s/AKfycbxM0RPWg8IS8PkGIUCDpSRWoAnmG9b15giwKf2V_kKY6Fbr7Xlq8cQbzyHboHnniXNEIg/exec";
+const URL_APPS_SCRIPT = "https://script.google.com/macros/s/AKfycbyOQ9mUpjKBLALLudUUpScyemGlj4inmX5oVmgqBpdNrmoFlI-jd61klDRj6nmwLqqJ/exec";
 
 /*****************************************************************
  * Estado
@@ -516,7 +515,6 @@ function addMatRow() {
   tr.innerHTML = `<td><input type="text" placeholder="Descripción del material"></td>
     <td><input type="text" placeholder="COD-001"></td>
     <td><input type="number" placeholder="1" min="0" step="0.5"></td>
-    <td><input type="number" placeholder="0" min="0" step="100"></td>
     <td><button class="btn-del-row" onclick="this.closest('tr').remove()">×</button></td>`;
   tbody.appendChild(tr);
 }
@@ -525,7 +523,7 @@ function getMateriales() {
   const rows = document.querySelectorAll('#mat-tbody tr');
   return Array.from(rows).map(r => {
     const inputs = r.querySelectorAll('input');
-    return { desc: inputs[0].value, codigo: inputs[1].value, cantidad: inputs[2].value, precio: inputs[3].value };
+    return { desc: inputs[0].value, codigo: inputs[1].value, cantidad: inputs[2].value };
   }).filter(m => m.desc.trim());
 }
 
@@ -649,26 +647,35 @@ function getFormData() {
 }
 
 async function guardarGuia() {
-  const data = getFormData();
-  if (!data.cliente) { showToast('Ingresa el nombre del cliente.', 'error'); return; }
+  const dataPDF = getFormData(); // contiene firmas para el PDF local
+  if (!dataPDF.cliente) { showToast('Ingresa el nombre del cliente.', 'error'); return; }
+  // Lo que se envía al servidor: SIN firmas (no se guardan en Drive)
+  const dataServidor = { ...dataPDF, firmaTec: '', firmaCli: '' };
+
   const btn = document.getElementById('btn-guardar');
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span> Subiendo a Drive...';
   showToast("Subiendo guía a Google Drive...", "info");
 
   try {
-    const resp = await api("guardarGuia", data);
+    const resp = await api("guardarGuia", dataServidor);
     if (resp.status === "success") {
-      data.folio = resp.folio || data.folio; // folio definitivo del servidor
-      showToast('Guía ' + data.folio + ' guardada en Drive.', 'success');
-      // Refrescamos folio para la próxima
-      folioCont = parseInt(String(resp.folio).replace("GST-", "")) + 1;
-      updateFolioDisplay();
-      // Invalidamos cachés
+      const folioFinal = resp.folio || dataPDF.folio;
+      dataPDF.folio = folioFinal;
+      showToast('Guía ' + folioFinal + ' guardada. Generando PDF...', 'success');
+      folioCont = parseInt(String(folioFinal).replace("GST-", "")) + 1;
       cacheGuias = []; cacheMateriales = [];
-      setTimeout(() => {
-        if (confirm('¿Deseas generar el PDF de esta guía?')) generarPDF(data);
-      }, 400);
+      // 1) PDF automático con firmas (locales) → además sube el PDF a la carpeta del folio
+      try {
+        const pdfDataUri = generarPDF(dataPDF);
+        if (pdfDataUri) {
+          api("subirPDF", { folio: folioFinal, pdfBase64: pdfDataUri })
+            .then(r => { if (r && r.status === "ok") showToast('PDF subido a Drive ✅', 'success'); })
+            .catch(err => console.warn('No se pudo subir el PDF a Drive:', err));
+        }
+      } catch (e) { console.error(e); }
+      // 2) Limpiar formulario para nueva guía
+      setTimeout(() => limpiarFormulario(), 600);
     } else {
       showToast(resp.message || 'Error al guardar.', 'error');
     }
@@ -679,6 +686,23 @@ async function guardarGuia() {
     btn.disabled = false;
     btn.innerHTML = '☁️ Guardar en Drive';
   }
+}
+
+function limpiarFormulario() {
+  ['f-cliente', 'f-sucursal', 'f-direccion', 'f-hora-inicio', 'f-hora-termino',
+   'f-trabajo', 'f-observaciones', 'f-tec-rut', 'f-cli-nombre', 'f-cli-rut', 'f-email'
+  ].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+  document.getElementById('mat-tbody').innerHTML = '';
+  addMatRow();
+  fotosData = [];
+  renderFotos();
+  clearCanvas('canvas-tec');
+  clearCanvas('canvas-cli');
+  document.getElementById('f-fecha').value = new Date().toISOString().split('T')[0];
+  document.getElementById('f-tec-nombre').value = currentUser.name || '';
+  updateFolioDisplay();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  showToast('Formulario listo para una nueva guía.', 'info');
 }
 
 /*****************************************************************
@@ -744,16 +768,14 @@ function generarPDF(data) {
     doc.rect(pad, y - 4, W - pad * 2, 7, 'F');
     doc.setFontSize(8); doc.setFont(undefined, 'bold'); doc.setTextColor(60, 60, 60);
     doc.text('Descripción', pad + 2, y);
-    doc.text('Código', 105, y);
-    doc.text('Cantidad', 140, y);
-    doc.text('P.Unit.', 168, y);
+    doc.text('Código', 120, y);
+    doc.text('Cantidad', 165, y);
     y += 5;
     data.materiales.forEach(m => {
       doc.setFont(undefined, 'normal'); doc.setTextColor(30, 30, 30); doc.setFontSize(8);
       doc.text(String(m.desc || ''), pad + 2, y);
-      doc.text(String(m.codigo || ''), 105, y);
-      doc.text(String(m.cantidad || ''), 142, y);
-      doc.text(m.precio ? '$' + m.precio : '', 168, y);
+      doc.text(String(m.codigo || ''), 120, y);
+      doc.text(String(m.cantidad || ''), 167, y);
       y += 5;
       doc.setDrawColor(220, 220, 220); doc.line(pad, y - 1, W - pad, y - 1);
     });
@@ -792,6 +814,7 @@ function generarPDF(data) {
 
   doc.save('Guia_' + data.folio + '.pdf');
   showToast('PDF generado: Guia_' + data.folio + '.pdf', 'success');
+  return doc.output('datauristring'); // base64 dataURI para subir a Drive
 }
 
 /*****************************************************************
@@ -932,10 +955,10 @@ async function renderMatExport(force) {
     cacheMateriales = allMat;
     if (!allMat.length) { div.innerHTML = '<p style="color:var(--gray-500)">No hay materiales registrados aún.</p>'; return; }
     div.innerHTML = `<div style="overflow-x:auto"><table class="admin-table">
-      <thead><tr><th>Folio</th><th>Fecha</th><th>Cliente</th><th>Descripción</th><th>Código</th><th>Cantidad</th><th>Precio Unit.</th></tr></thead>
+      <thead><tr><th>Folio</th><th>Fecha</th><th>Cliente</th><th>Descripción</th><th>Código</th><th>Cantidad</th></tr></thead>
       <tbody>${allMat.map(m => `<tr>
         <td>${m.folio || '-'}</td><td>${m.fecha || '-'}</td><td>${m.cliente || '-'}</td>
-        <td>${m.desc || '-'}</td><td>${m.codigo || '-'}</td><td>${m.cantidad || '-'}</td><td>${m.precio ? '$' + m.precio : '-'}</td>
+        <td>${m.desc || '-'}</td><td>${m.codigo || '-'}</td><td>${m.cantidad || '-'}</td>
       </tr>`).join('')}</tbody>
     </table></div>`;
   } catch (e) {
@@ -948,7 +971,7 @@ function exportarExcel() {
   const wb = XLSX.utils.book_new();
   const allMat = cacheGuias.flatMap(g => (g.materiales || []).map(m => ({
     'N° Guía': g.folio, 'Fecha': g.fecha, 'Cliente': g.cliente, 'Sucursal': g.sucursal,
-    'Descripción': m.desc, 'Código': m.codigo, 'Cantidad': m.cantidad, 'Precio Unitario': m.precio
+    'Descripción': m.desc, 'Código': m.codigo, 'Cantidad': m.cantidad
   })));
   const ws = XLSX.utils.json_to_sheet(allMat.length ? allMat : [{ 'N° Guía': 'Sin datos' }]);
   XLSX.utils.book_append_sheet(wb, ws, 'Materiales');
@@ -978,7 +1001,7 @@ function showToast(msg, type = '') {
 
 window.addEventListener('load', () => { renderFotos(); });
 </script>
-<script defer="" src="./SECURITEK - Sistema de Guías de Servicio Técnico_files/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon="{&quot;version&quot;:&quot;2024.11.0&quot;,&quot;token&quot;:&quot;7f7b0fd8732c4326aae4b9d58d5c514a&quot;,&quot;server_timing&quot;:{&quot;name&quot;:{&quot;cfCacheStatus&quot;:true,&quot;cfEdge&quot;:true,&quot;cfExtPri&quot;:true,&quot;cfL4&quot;:true,&quot;cfOrigin&quot;:true,&quot;cfSpeedBrain&quot;:true},&quot;location_startswith&quot;:null}}" crossorigin="anonymous"></script>
-
+<script defer="" src="./SECURITEK - Sistema de Guías de Servicio Técnico2_files/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon="{&quot;version&quot;:&quot;2024.11.0&quot;,&quot;token&quot;:&quot;7f7b0fd8732c4326aae4b9d58d5c514a&quot;,&quot;server_timing&quot;:{&quot;name&quot;:{&quot;cfCacheStatus&quot;:true,&quot;cfEdge&quot;:true,&quot;cfExtPri&quot;:true,&quot;cfL4&quot;:true,&quot;cfOrigin&quot;:true,&quot;cfSpeedBrain&quot;:true},&quot;location_startswith&quot;:null}}" crossorigin="anonymous"></script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9f405e7e9c30b44e',t:'MTc3NzQ4NzMzNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><iframe height="1" width="1" style="position: absolute; top: 0px; left: 0px; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; visibility: hidden;" src="./SECURITEK - Sistema de Guías de Servicio Técnico2_files/saved_resource.html"></iframe>
 
 </body></html>
