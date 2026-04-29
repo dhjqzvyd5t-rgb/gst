@@ -572,18 +572,39 @@ function getFormData(){
   };
 }
 
-function guardarGuia(){
+function guardarGuia() {
   const data = getFormData();
   if(!data.cliente){showToast('Ingresa el nombre del cliente.','error'); return;}
+
+  // Guardado local (el que ya tienes)
   guias.push(data);
   localStorage.setItem('securitek_guias', JSON.stringify(guias));
   folioCont++;
   localStorage.setItem('securitek_folio', folioCont);
-  showToast('Guía ' + data.folio + ' guardada exitosamente.','success');
+
+  // --- NUEVO: ENVÍO A GOOGLE DRIVE ---
+  const URL_APPS_SCRIPT = "TU_URL_DE_GOOGLE_APPS_SCRIPT_AQUI"; // REEMPLAZA ESTO
+
+  showToast('Sincronizando con Google Drive...', 'info');
+
+  try {
+    await fetch(URL_APPS_SCRIPT, {
+      method: 'POST',
+      mode: 'no-cors', 
+      body: JSON.stringify(data),
+      headers: { 'Content-Type': 'application/json' }
+    });
+    showToast('Guía ' + data.folio + ' guardada y sincronizada.', 'success');
+  } catch (error) {
+    console.error('Error al sincronizar:', error);
+    showToast('Guardado local OK, pero falló la sincronización.', 'error');
+  }
+  // ------------------------------------
+
   setTimeout(()=>{
     if(confirm('¿Deseas generar el PDF de esta guía?')) generarPDF(data);
   }, 500);
-}
+}}
 
 function generarPDF(data){
   data = data || getFormData();
